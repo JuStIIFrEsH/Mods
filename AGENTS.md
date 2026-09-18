@@ -36,6 +36,18 @@ Local Valheim references should use:
 - `VALHEIM_PATH`
 - `VALHEIM_PROFILE_PATH`
 
+## Local development profile
+
+Use the Thunderstore `Dev` profile for all local mod builds and deployments. `VALHEIM_PROFILE_PATH` must point to that profile before building.
+
+Treat the Thunderstore `Default` profile as a normal user profile: do not deploy JuStIIFrEsH development DLLs, assets, or configuration there.
+
+## FreshDedicatedStorage compatibility
+
+- The production project and assembly are `FreshStorage.csproj` and `FreshStorage.dll`.
+- FreshDedicatedStorage registers only Dedicated Storage Boxes and Hugin's Reliquary. Do not restore the removed `Mike_SmallStorageChest` six-slot chest or its prefab-protection exception.
+- Keep package and Dev deployment contents aligned with the production release: `FreshStorage.dll`, required documentation, and no legacy DLLs or obsolete asset files.
+
 ## Releases
 
 Thunderstore publishing workflows are in `.github/workflows/`.
