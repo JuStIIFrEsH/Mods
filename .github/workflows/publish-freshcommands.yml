@@ -20,7 +20,7 @@ jobs:
         run: |
           version="${GITHUB_REF_NAME#freshcommands-v}"
           test "$version" != "$GITHUB_REF_NAME"
-          package="Valheim/production/FreshCommands/FreshCommands-$version.zip"
+          package="Valheim/FreshCommands/FreshCommands-$version.zip"
           test -f "$package"
           test "$(unzip -p "$package" manifest.json | jq -r .version_number)" = "$version"
           mkdir -p dist

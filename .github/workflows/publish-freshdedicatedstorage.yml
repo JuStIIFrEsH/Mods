@@ -20,7 +20,7 @@ jobs:
         run: |
           version="${GITHUB_REF_NAME#freshdedicatedstorage-v}"
           test "$version" != "$GITHUB_REF_NAME"
-          package="Valheim/production/FreshDedicatedStorage/FreshDedicatedStorage-$version.zip"
+          package="Valheim/FreshDedicatedStorage/FreshDedicatedStorage-$version.zip"
           test -f "$package"
           test "$(unzip -p "$package" manifest.json | jq -r .version_number)" = "$version"
           mkdir -p dist
