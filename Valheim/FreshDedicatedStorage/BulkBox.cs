@@ -342,8 +342,8 @@ namespace Mike.Valheim.SmallStorageChest
         {
             var iconObject = new GameObject(name) { layer = gameObject.layer };
             iconObject.transform.SetParent(transform, false);
-            iconObject.transform.localPosition = new UnityEngine.Vector3(0f, TestModelAsset.BoxVisualSize.y * .48f,
-                side * (TestModelAsset.BoxVisualSize.z * .5f + .008f));
+            iconObject.transform.localPosition = new UnityEngine.Vector3(0f, ModelAsset.BoxVisualSize.y * .48f,
+                side * (ModelAsset.BoxVisualSize.z * .5f + .008f));
             // SpriteRenderer faces +Z by default. Flip the -Z face outward.
             iconObject.transform.localRotation = side < 0f
                 ? UnityEngine.Quaternion.Euler(0f, 180f, 0f)

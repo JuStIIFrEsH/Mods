@@ -71,6 +71,7 @@ namespace Mike.Valheim.SmallStorageChest
             Reply(args, "  Shift+E withdraws; hold Shift and scroll to choose the amount.");
             Reply(args, "  Alt+E uses one stored consumable.");
             Reply(args, "  Hugin's Reliquary stores matching items in assigned boxes within 50 meters.");
+            Reply(args, "  Report bugs: https://justiifresh.com/valheim/bug/");
         }
 
         private static void Reply(Terminal.ConsoleEventArgs args, string message) => args.Context?.AddString(message);

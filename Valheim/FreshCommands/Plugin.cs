@@ -122,6 +122,7 @@ namespace JuStIIFrEsH.Valheim.FreshCommands
             Reply(args, "  /tp corpse — teleports you to your most recent corpse.");
             Reply(args, "  /tp <name> — teleports you to a saved location.");
             Reply(args, "  /tp — lists saved locations.");
+            Reply(args, "  Report bugs: https://justiifresh.com/valheim/bug/");
         }
 
         private static void CorpseSubcommand(Terminal.ConsoleEventArgs args)
