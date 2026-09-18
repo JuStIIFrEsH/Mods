@@ -17,7 +17,7 @@ if ($Deploy) {
     if (!(Test-Path -LiteralPath (Join-Path $ProfilePath 'BepInEx\core\BepInEx.dll'))) {
         throw 'The selected profile does not contain BepInEx.'
     }
-    $destinationPath = Join-Path $ProfilePath 'BepInEx\plugins\Mike-SmallStorageChest'
+    $destinationPath = Join-Path $ProfilePath 'BepInEx\plugins\FreshDedicatedStorage'
     New-Item -ItemType Directory -Path $destinationPath -Force | Out-Null
     $compiledPath = Join-Path $PSScriptRoot 'FreshDedicatedStorage\bin\Release\netstandard2.1\SmallStorageChest.dll'
     $installedPath = Join-Path $destinationPath 'SmallStorageChest.dll'
