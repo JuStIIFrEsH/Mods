@@ -20,8 +20,7 @@ namespace Mike.Valheim.SmallStorageChest
     {
         public const string PluginGuid = "mike.valheim.smallstoragechest";
         public const string PluginName = "FreshDedicatedStorage";
-        public const string PluginVersion = "0.4.37";
-        public const string PrefabName = "Mike_SmallStorageChest";
+        public const string PluginVersion = "0.4.38";
 
         private static readonly FieldInfo ChatBufferField = typeof(Chat).GetField("m_chatBuffer", BindingFlags.Instance | BindingFlags.NonPublic);
         private static readonly FieldInfo ChatHideTimerField = typeof(Chat).GetField("m_hideTimer", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -36,7 +35,6 @@ namespace Mike.Valheim.SmallStorageChest
             try { StoreAndCraftBridge.Install(harmony); }
             catch (Exception error) { Logger.LogError($"StoreAndCraft bridge unavailable: {error}"); }
             TryInstallDedicatedRenameOverride(harmony);
-            PrefabManager.OnVanillaPrefabsAvailable += RegisterChest;
             PrefabManager.OnVanillaPrefabsAvailable += RegisterBulkBox;
             PrefabManager.OnVanillaPrefabsAvailable += RegisterSortingStation;
             Logger.LogInfo("FreshDedicatedStorage loaded; waiting for vanilla prefabs.");
@@ -76,53 +74,6 @@ namespace Mike.Valheim.SmallStorageChest
 
         private static void Reply(Terminal.ConsoleEventArgs args, string message) => args.Context?.AddString(message);
 
-        private void RegisterChest()
-        {
-            // Jotunn retains the registered prefab across world/menu transitions.
-            PrefabManager.OnVanillaPrefabsAvailable -= RegisterChest;
-            try
-            {
-                var config = new PieceConfig
-                {
-                    Name = PluginName,
-                    Description = "A compact wooden chest with 6 storage slots.",
-                    PieceTable = "Hammer",
-                    Category = "Furniture",
-                    CraftingStation = "piece_workbench"
-                };
-                config.AddRequirement("Wood", 5, recover: true);
-
-                var chest = new CustomPiece(PrefabName, "piece_chest_wood", config);
-                if (!chest.PiecePrefab)
-                {
-                    throw new InvalidOperationException("Could not clone piece_chest_wood.");
-                }
-
-                var container = chest.PiecePrefab.GetComponent<Container>();
-                if (!container)
-                {
-                    throw new InvalidOperationException("The wooden chest has no Container component.");
-                }
-                container.m_name = PluginName;
-                container.m_width = 3;
-                container.m_height = 2;
-
-                // Scale the whole clone so its model, colliders and placement points agree.
-                chest.PiecePrefab.transform.localScale *= 0.75f;
-                chest.PiecePrefab.GetComponent<ZNetView>().m_syncInitialScale = true;
-
-                if (!PieceManager.Instance.AddPiece(chest))
-                {
-                    throw new InvalidOperationException("Jotunn rejected the chest registration.");
-                }
-                Logger.LogInfo("Registered Mike_SmallStorageChest: 3x2 slots, 5 Wood, Hammer/Furniture.");
-            }
-            catch (Exception error)
-            {
-                Logger.LogError($"Small Storage Chest registration failed: {error}");
-            }
-        }
-
         private void TryInstallDedicatedRenameOverride(Harmony harmony)
         {
             try
@@ -142,7 +93,6 @@ namespace Mike.Valheim.SmallStorageChest
 
         private void OnDestroy()
         {
-            PrefabManager.OnVanillaPrefabsAvailable -= RegisterChest;
             PrefabManager.OnVanillaPrefabsAvailable -= RegisterBulkBox;
             PrefabManager.OnVanillaPrefabsAvailable -= RegisterSortingStation;
             new Harmony(PluginGuid).UnpatchSelf();

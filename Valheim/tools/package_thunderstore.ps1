@@ -44,7 +44,7 @@ Compress-Archive -LiteralPath (Get-ChildItem -LiteralPath $stage | ForEach-Objec
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $archive = [System.IO.Compression.ZipFile]::OpenRead($zip)
 try {
-    $entries = @($archive.Entries.FullName)
+    $entries = @($archive.Entries.FullName | ForEach-Object { $_.Replace('\', '/') })
     foreach ($required in @('manifest.json', 'README.md', 'CHANGELOG.md', 'icon.png', 'BepInEx/plugins/JuStIIFrEsH-FreshDedicatedStorage/FreshStorage.dll')) {
         if ($entries -notcontains $required) { throw "Package is missing required entry: $required" }
     }

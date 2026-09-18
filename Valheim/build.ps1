@@ -21,9 +21,14 @@ if ($Deploy) {
     New-Item -ItemType Directory -Path $destinationPath -Force | Out-Null
     $compiledPath = Join-Path $PSScriptRoot 'FreshDedicatedStorage\bin\Release\netstandard2.1\FreshStorage.dll'
     $installedPath = Join-Path $destinationPath 'FreshStorage.dll'
-    $legacyInstalledPath = Join-Path $destinationPath 'SmallStorageChest.dll'
-    if (Test-Path -LiteralPath $legacyInstalledPath) {
-        Remove-Item -LiteralPath $legacyInstalledPath -Force
+    foreach ($legacyInstalledPath in @(
+        (Join-Path $destinationPath 'SmallStorageChest.dll'),
+        (Join-Path $destinationPath 'SmallStorageChest.dll.previous'),
+        (Join-Path $destinationPath 'QUATERNIUS-LICENSE.txt')
+    )) {
+        if (Test-Path -LiteralPath $legacyInstalledPath) {
+            Remove-Item -LiteralPath $legacyInstalledPath -Force
+        }
     }
     if (Test-Path -LiteralPath $installedPath) {
         Copy-Item -LiteralPath $installedPath -Destination "$installedPath.previous" -Force

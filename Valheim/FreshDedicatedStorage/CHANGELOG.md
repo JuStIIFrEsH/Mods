@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.38
+
+- Removed the unintended six-slot FreshDedicatedStorage chest. The mod now registers only Dedicated Storage Boxes and Hugin's Reliquary.
+- Renamed the plugin assembly to `FreshStorage.dll`.
+
 ## 0.4.37
 
 - Added the bug-report link to `/freshstorage` help.

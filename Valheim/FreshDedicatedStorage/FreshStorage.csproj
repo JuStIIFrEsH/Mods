@@ -4,7 +4,7 @@
     <LangVersion>latest</LangVersion>
     <AssemblyName>FreshStorage</AssemblyName>
     <RootNamespace>Mike.Valheim.SmallStorageChest</RootNamespace>
-    <Version>0.4.37</Version>
+    <Version>0.4.38</Version>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <ValheimPath Condition="'$(ValheimPath)' == ''">$(VALHEIM_PATH)</ValheimPath>
     <ProfilePath Condition="'$(ProfilePath)' == ''">$(VALHEIM_PROFILE_PATH)</ProfilePath>
