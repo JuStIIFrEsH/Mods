@@ -4,6 +4,12 @@
 
 This is the public production source repository for JuStIIFrEsH mods.
 
+## Sync before work
+
+GitHub `main` is the source of truth. Before starting any task, fetch `origin` and fast-forward the local `main` branch to `origin/main`. Do not begin work from a stale local branch.
+
+Before pushing, fetch `origin` again. If `origin/main` changed while you were working, integrate those changes cleanly before pushing. Do not force-push over remote work unless explicitly instructed.
+
 ## Valheim
 
 Production Valheim mods live under:
