@@ -2,6 +2,10 @@
 
 Important changes to FreshCommands are recorded here.
 
+## 2.4.19
+
+- Added the bug-report link to `/freshcommands` help.
+
 ## 2.4.18
 
 - Added the initial changelog.

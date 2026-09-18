@@ -20,7 +20,7 @@ namespace Mike.Valheim.SmallStorageChest
     {
         public const string PluginGuid = "mike.valheim.smallstoragechest";
         public const string PluginName = "FreshDedicatedStorage";
-        public const string PluginVersion = "0.4.36";
+        public const string PluginVersion = "0.4.37";
         public const string PrefabName = "Mike_SmallStorageChest";
 
         private static readonly FieldInfo ChatBufferField = typeof(Chat).GetField("m_chatBuffer", BindingFlags.Instance | BindingFlags.NonPublic);

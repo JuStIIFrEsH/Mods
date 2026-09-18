@@ -12,7 +12,7 @@ namespace JuStIIFrEsH.Valheim.FreshCommands
     {
         public const string PluginGuid = "justiifresh.valheim.freshcommands";
         public const string PluginName = "FreshCommands";
-        public const string PluginVersion = "2.4.18";
+        public const string PluginVersion = "2.4.19";
 
         private static Plugin Instance;
         private const string LocationStoreKey = "freshcommands.locations.v1";
