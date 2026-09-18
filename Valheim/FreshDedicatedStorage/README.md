@@ -12,7 +12,6 @@ Stackable single-item storage for Valheim with automatic inventory routing throu
 
 ## Requirements
 
-- Valheim
 - BepInExPack Valheim
 - Jotunn
 
