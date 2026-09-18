@@ -1,0 +1,39 @@
+name: Publish FreshCommands
+
+on:
+  push:
+    tags:
+      - 'freshcommands-v*'
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: version
+        name: Validate release tag and package
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#freshcommands-v}"
+          test "$version" != "$GITHUB_REF_NAME"
+          test "$(jq -r .version_number Valheim/FreshCommands/manifest.json)" = "$version"
+          mkdir -p dist
+          cp "Valheim/production/FreshCommands/FreshCommands-$version.zip" dist/release-package.zip
+          echo "value=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Publish to Thunderstore
+        uses: dhkatz/thunderstore-publish@29609c8e55f47958ee84cc09d96ad1e72a0ea365
+        with:
+          token: ${{ secrets.THUNDERSTORE_TOKEN }}
+          namespace: JuStIIFrEsH
+          name: FreshCommands
+          version: ${{ steps.version.outputs.value }}
+          communities: valheim
+          categories: tools
+          description: FreshCommands adds Valheim console and chat commands for corpse recovery, distant corpse inventory retrieval, teleporting home or to corpses, and named teleport locations.
+          # The publisher action runs from / and prefixes this value with dist/.
+          file: ../../github/workspace/dist/release-package.zip

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>FreshCommands</AssemblyName>
+    <RootNamespace>JuStIIFrEsH.Valheim.FreshCommands</RootNamespace>
+    <Version>2.4.18</Version>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <ValheimPath Condition="'$(ValheimPath)' == ''">$(VALHEIM_PATH)</ValheimPath>
+    <ProfilePath Condition="'$(ProfilePath)' == ''">$(VALHEIM_PROFILE_PATH)</ProfilePath>
+    <ManagedPath>$(ValheimPath)\valheim_Data\Managed</ManagedPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BepInEx"><HintPath>$(ProfilePath)\BepInEx\core\BepInEx.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="assembly_valheim"><HintPath>$(ManagedPath)\assembly_valheim.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="assembly_utils"><HintPath>$(ManagedPath)\assembly_utils.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(ManagedPath)\UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(ManagedPath)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.PhysicsModule"><HintPath>$(ManagedPath)\UnityEngine.PhysicsModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.TextMeshPro"><HintPath>$(ManagedPath)\Unity.TextMeshPro.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UI"><HintPath>$(ManagedPath)\UnityEngine.UI.dll</HintPath><Private>false</Private></Reference>
+    <Reference Update="BepInEx;assembly_valheim;assembly_utils;UnityEngine;UnityEngine.CoreModule;UnityEngine.PhysicsModule;Unity.TextMeshPro;UnityEngine.UI">
+      <ExternallyResolved>true</ExternallyResolved>
+    </Reference>
+  </ItemGroup>
+</Project>

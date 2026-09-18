@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>SmallStorageChest</AssemblyName>
+    <RootNamespace>Mike.Valheim.SmallStorageChest</RootNamespace>
+    <Version>0.4.36</Version>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <ValheimPath Condition="'$(ValheimPath)' == ''">$(VALHEIM_PATH)</ValheimPath>
+    <ProfilePath Condition="'$(ProfilePath)' == ''">$(VALHEIM_PROFILE_PATH)</ProfilePath>
+    <ManagedPath>$(ValheimPath)\valheim_Data\Managed</ManagedPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\dedicated_storage_box.obj;Assets\hugins_reliquary_column.obj" />
+    <Reference Include="0Harmony"><HintPath>$(ProfilePath)\BepInEx\core\0Harmony.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="assembly_utils"><HintPath>$(ManagedPath)\assembly_utils.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="assembly_guiutils"><HintPath>$(ManagedPath)\assembly_guiutils.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="gui_framework"><HintPath>$(ManagedPath)\gui_framework.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.PhysicsModule"><HintPath>$(ManagedPath)\UnityEngine.PhysicsModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.ImageConversionModule"><HintPath>$(ManagedPath)\UnityEngine.ImageConversionModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.TextMeshPro"><HintPath>$(ManagedPath)\Unity.TextMeshPro.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UI"><HintPath>$(ManagedPath)\UnityEngine.UI.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="BepInEx"><HintPath>$(ProfilePath)\BepInEx\core\BepInEx.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Jotunn"><HintPath>$(ProfilePath)\BepInEx\plugins\ValheimModding-Jotunn\Jotunn.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="assembly_valheim"><HintPath>$(ManagedPath)\assembly_valheim.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(ManagedPath)\UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(ManagedPath)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.AssetBundleModule"><HintPath>$(ManagedPath)\UnityEngine.AssetBundleModule.dll</HintPath><Private>false</Private></Reference>
+    <!-- These libraries and their transitive dependencies are supplied by the game host. -->
+    <Reference Update="BepInEx;Jotunn;0Harmony;assembly_valheim;assembly_utils;assembly_guiutils;gui_framework;UnityEngine;UnityEngine.CoreModule;UnityEngine.AssetBundleModule;UnityEngine.PhysicsModule;UnityEngine.ImageConversionModule;Unity.TextMeshPro;UnityEngine.UI">
+      <ExternallyResolved>true</ExternallyResolved>
+    </Reference>
+  </ItemGroup>
+</Project>
+
+
+
+
+
