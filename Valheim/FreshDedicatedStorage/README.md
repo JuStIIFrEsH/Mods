@@ -19,7 +19,9 @@ Thunderstore installs the required dependencies automatically.
 
 ## Installation
 
-Install FreshDedicatedStorage through Thunderstore. The mod is currently intended for single-player worlds.
+Install FreshStorage through Thunderstore, or copy `FreshStorage.dll` into a folder under `BepInEx/plugins` and launch Valheim.
+
+Dev commands do not need to be enabled.
 
 ## Pieces
 
