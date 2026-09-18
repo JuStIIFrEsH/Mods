@@ -1,15 +1,26 @@
 # FreshDedicatedStorage
 
-Author: JuStIIFrEsH
+Stackable single-item storage for Valheim with automatic inventory routing through Hugin's Reliquary.
 
-Stackable single-item storage for Valheim.
+**Author:** JuStIIFrEsH
 
-## Requires
+## Links
 
+- [Valheim Mods](https://justiifresh.com/valheim/)
+- [Report a Bug](https://justiifresh.com/valheim/bug/)
+- [Thunderstore](https://thunderstore.io/c/valheim/p/JuStIIFrEsH/FreshDedicatedStorage/)
+
+## Requirements
+
+- Valheim
 - BepInExPack Valheim
 - Jotunn
 
-Thunderstore installs both automatically. The mod is currently intended for single-player worlds.
+Thunderstore installs the required dependencies automatically.
+
+## Installation
+
+Install FreshDedicatedStorage through Thunderstore. The mod is currently intended for single-player worlds.
 
 ## Pieces
 
@@ -36,4 +47,4 @@ Build it from **Hammer > Furniture** for 10 Wood. Press **E** to deposit matchin
 
 ## Credits
 
-The embedded chest and column geometry are CC0 assets by Quaternius from Poly Pizza. Full attribution is in `ASSET-CREDITS.md`.
+The embedded chest and column geometry are CC0 assets by Quaternius from Poly Pizza. Full attribution is in [`ASSET-CREDITS.md`](./ASSET-CREDITS.md).
