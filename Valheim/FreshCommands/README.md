@@ -12,9 +12,7 @@ A lightweight standalone BepInEx mod that adds useful console and chat commands 
 
 ## Requirements
 
-- Valheim
 - BepInEx 5
-- Jotunn is not required.
 
 ## Installation
 
