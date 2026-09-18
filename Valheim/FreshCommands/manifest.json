@@ -1,9 +1,0 @@
-{
-  "name": "FreshCommands",
-  "version_number": "2.4.19",
-  "website_url": "https://github.com/JuStIIFrEsH/Mods/tree/main/Valheim/FreshCommands",
-  "description": "FreshCommands adds Valheim console and chat commands for corpse recovery, distant corpse inventory retrieval, teleporting home or to corpses, and setting custom named locations for teleportation with set, list, and delete controls.",
-  "dependencies": [
-    "denikson-BepInExPack_Valheim-5.4.2333"
-  ]
-}

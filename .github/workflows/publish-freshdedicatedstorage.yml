@@ -20,9 +20,11 @@ jobs:
         run: |
           version="${GITHUB_REF_NAME#freshdedicatedstorage-v}"
           test "$version" != "$GITHUB_REF_NAME"
-          test "$(jq -r .version_number Valheim/FreshDedicatedStorage/manifest.json)" = "$version"
+          package="Valheim/production/FreshDedicatedStorage/FreshDedicatedStorage-$version.zip"
+          test -f "$package"
+          test "$(unzip -p "$package" manifest.json | jq -r .version_number)" = "$version"
           mkdir -p dist
-          cp "Valheim/production/FreshDedicatedStorage/FreshDedicatedStorage-$version.zip" dist/release-package.zip
+          cp "$package" dist/release-package.zip
           echo "value=$version" >> "$GITHUB_OUTPUT"
 
       - name: Publish to Thunderstore
