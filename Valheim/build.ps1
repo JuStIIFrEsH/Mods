@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 if ([string]::IsNullOrWhiteSpace($ValheimPath) -or [string]::IsNullOrWhiteSpace($ProfilePath)) {
     throw 'Set VALHEIM_PATH and VALHEIM_PROFILE_PATH, or pass -ValheimPath and -ProfilePath.'
 }
-$projectPath = Join-Path $PSScriptRoot 'FreshDedicatedStorage\SmallStorageChest.csproj'
+$projectPath = Join-Path $PSScriptRoot 'FreshDedicatedStorage\FreshStorage.csproj'
 & dotnet build $projectPath --configuration Release --nologo "-p:ValheimPath=$ValheimPath" "-p:ProfilePath=$ProfilePath"
 if ($LASTEXITCODE -ne 0) { throw 'Build failed. Nothing was deployed.' }
 if ($Deploy) {
@@ -19,14 +19,17 @@ if ($Deploy) {
     }
     $destinationPath = Join-Path $ProfilePath 'BepInEx\plugins\FreshDedicatedStorage'
     New-Item -ItemType Directory -Path $destinationPath -Force | Out-Null
-    $compiledPath = Join-Path $PSScriptRoot 'FreshDedicatedStorage\bin\Release\netstandard2.1\SmallStorageChest.dll'
-    $installedPath = Join-Path $destinationPath 'SmallStorageChest.dll'
+    $compiledPath = Join-Path $PSScriptRoot 'FreshDedicatedStorage\bin\Release\netstandard2.1\FreshStorage.dll'
+    $installedPath = Join-Path $destinationPath 'FreshStorage.dll'
+    $legacyInstalledPath = Join-Path $destinationPath 'SmallStorageChest.dll'
+    if (Test-Path -LiteralPath $legacyInstalledPath) {
+        Remove-Item -LiteralPath $legacyInstalledPath -Force
+    }
     if (Test-Path -LiteralPath $installedPath) {
         Copy-Item -LiteralPath $installedPath -Destination "$installedPath.previous" -Force
     }
     Copy-Item -LiteralPath $compiledPath -Destination $installedPath -Force
-    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'FreshDedicatedStorage\Assets\QUATERNIUS-LICENSE.txt') -Destination $destinationPath -Force
-    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'FreshDedicatedStorage\Assets\SOURCE.md') -Destination (Join-Path $destinationPath 'ASSET-CREDITS.md') -Force
+    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'FreshDedicatedStorage\ASSET-CREDITS.md') -Destination $destinationPath -Force
     if ((Get-FileHash -LiteralPath $compiledPath).Hash -ne (Get-FileHash -LiteralPath $installedPath).Hash) {
         throw 'Deployed DLL hash does not match the build.'
     }

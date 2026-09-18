@@ -4,7 +4,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
-$project = Join-Path $root 'FreshDedicatedStorage\SmallStorageChest.csproj'
+$project = Join-Path $root 'FreshDedicatedStorage\FreshStorage.csproj'
 $version = ([xml](Get-Content -Raw -LiteralPath $project)).Project.PropertyGroup.Version
 if ([string]::IsNullOrWhiteSpace($version)) { throw 'No project version was found.' }
 
@@ -12,7 +12,7 @@ $packageSource = Join-Path $root 'FreshDedicatedStorage'
 $stage = Join-Path ([System.IO.Path]::GetTempPath()) "FreshDedicatedStorage-$version"
 $production = Join-Path $root 'production\FreshDedicatedStorage'
 $zip = Join-Path $production "FreshDedicatedStorage-$version.zip"
-$dll = Join-Path $root "FreshDedicatedStorage\bin\$Configuration\netstandard2.1\SmallStorageChest.dll"
+$dll = Join-Path $root "FreshDedicatedStorage\bin\$Configuration\netstandard2.1\FreshStorage.dll"
 
 & dotnet build $project --configuration $Configuration --nologo
 if ($LASTEXITCODE -ne 0) { throw 'Build failed; package was not created.' }
@@ -36,7 +36,7 @@ finally { $icon.Dispose() }
 
 $pluginDir = Join-Path $stage 'BepInEx\plugins\JuStIIFrEsH-FreshDedicatedStorage'
 New-Item -ItemType Directory -Force -Path $pluginDir | Out-Null
-Copy-Item -LiteralPath $dll -Destination (Join-Path $pluginDir 'SmallStorageChest.dll')
+Copy-Item -LiteralPath $dll -Destination (Join-Path $pluginDir 'FreshStorage.dll')
 
 if (Test-Path -LiteralPath $zip) { Remove-Item -LiteralPath $zip -Force }
 Compress-Archive -LiteralPath (Get-ChildItem -LiteralPath $stage | ForEach-Object FullName) -DestinationPath $zip -CompressionLevel Optimal
@@ -45,7 +45,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 $archive = [System.IO.Compression.ZipFile]::OpenRead($zip)
 try {
     $entries = @($archive.Entries.FullName)
-    foreach ($required in @('manifest.json', 'README.md', 'CHANGELOG.md', 'icon.png', 'BepInEx/plugins/JuStIIFrEsH-FreshDedicatedStorage/SmallStorageChest.dll')) {
+    foreach ($required in @('manifest.json', 'README.md', 'CHANGELOG.md', 'icon.png', 'BepInEx/plugins/JuStIIFrEsH-FreshDedicatedStorage/FreshStorage.dll')) {
         if ($entries -notcontains $required) { throw "Package is missing required entry: $required" }
     }
     if ($entries | Where-Object { $_ -like "FreshDedicatedStorage-$version/*" }) { throw 'ZIP must not contain a wrapping directory.' }
