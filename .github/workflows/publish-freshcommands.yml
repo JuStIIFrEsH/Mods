@@ -36,6 +36,6 @@ jobs:
           version: ${{ steps.version.outputs.value }}
           communities: valheim
           categories: tools
-          description: FreshCommands adds Valheim console and chat commands for corpse recovery, distant corpse inventory retrieval, teleporting home or to corpses, and named teleport locations.
+          description: FreshCommands adds Valheim console and chat commands for corpse recovery, distant corpse inventory retrieval, teleporting home or to corpses, and named teleport locations, plus quick-use teleportation structures.
           # The publisher action runs from / and prefixes this value with dist/.
           file: ../../github/workspace/dist/release-package.zip
