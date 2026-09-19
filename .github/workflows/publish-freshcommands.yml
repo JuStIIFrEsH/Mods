@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - 'freshcommands-v*'
+    branches:
+      - 'publish-freshcommands-*'
 
 permissions:
   contents: read
@@ -18,8 +20,13 @@ jobs:
         name: Validate release tag and package
         shell: bash
         run: |
-          version="${GITHUB_REF_NAME#freshcommands-v}"
-          test "$version" != "$GITHUB_REF_NAME"
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            version="${GITHUB_REF_NAME#freshcommands-v}"
+            test "$version" != "$GITHUB_REF_NAME"
+          else
+            version="${GITHUB_REF_NAME#publish-freshcommands-}"
+            test "$version" != "$GITHUB_REF_NAME"
+          fi
           package="Valheim/FreshCommands/FreshCommands-$version.zip"
           test -f "$package"
           test "$(unzip -p "$package" manifest.json | jq -r .version_number)" = "$version"
