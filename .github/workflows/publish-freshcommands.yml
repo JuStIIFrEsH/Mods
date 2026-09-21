@@ -36,6 +36,6 @@ jobs:
           version: ${{ steps.version.outputs.value }}
           communities: valheim
           categories: tools
-          description: "FreshCommands adds Valheim console/chat commands for instant corpse recovery and named teleportation. Build Corpsecaller's Effigy, Wayfarer's Oathstone, and Wayfarer's Reach for quick travel to your corpse, home, and saved destinations."
+          description: "FreshCommands adds Valheim console/chat commands for instant corpse recovery and user defined teleportation locations. Build Corpsecaller's Effigy, Wayfarer's Oathstone, and Wayfarer's Reach for quick travel to your corpse, home, and saved locations."
           # The publisher action runs from / and prefixes this value with dist/.
           file: ../../github/workspace/dist/release-package.zip
