@@ -1,0 +1,56 @@
+name: Publish Valheim mod to Nexus Mods
+
+on:
+  push:
+    tags:
+      - 'freshcommands-v*'
+      - 'freshdedicatedstorage-v*'
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select and validate released package
+        id: package
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$GITHUB_REF_NAME" == freshcommands-v* ]]; then
+            mod=FreshCommands
+            dll=FreshCommands.dll
+            file_id=8012718
+            version="${GITHUB_REF_NAME#freshcommands-v}"
+          elif [[ "$GITHUB_REF_NAME" == freshdedicatedstorage-v* ]]; then
+            mod=FreshDedicatedStorage
+            dll=FreshStorage.dll
+            file_id=8012748
+            version="${GITHUB_REF_NAME#freshdedicatedstorage-v}"
+          else
+            echo 'Unsupported release tag' >&2
+            exit 1
+          fi
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          source="Valheim/$mod/$mod-$version.zip"
+          destination="$RUNNER_TEMP/$mod-$version-Nexus.zip"
+          test -f "$source"
+          python3 .github/scripts/package_nexus.py "$source" "$destination" \
+            --name "$mod" --version "$version" --dll "$dll"
+          echo "file_id=$file_id" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "destination=$destination" >> "$GITHUB_OUTPUT"
+
+      - name: Publish new Nexus file version
+        uses: Nexus-Mods/upload-action@v1.0.0-beta.10
+        with:
+          api_key: ${{ secrets.NEXUS_TOKEN }}
+          file_id: ${{ steps.package.outputs.file_id }}
+          filename: ${{ steps.package.outputs.destination }}
+          version: ${{ steps.package.outputs.version }}
+          category: main
+          primary_mod_manager_download: true
+          update_mod_version: true
