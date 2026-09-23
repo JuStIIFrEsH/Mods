@@ -1,6 +1,6 @@
 # Mods releases
 
-Production Thunderstore release packages for JuStIIFrEsH Valheim mods.
+Production release packages for JuStIIFrEsH Valheim mods.
 
 Source and local development are maintained separately in `JuStIIFrEsH/Mods-Dev`.
 
