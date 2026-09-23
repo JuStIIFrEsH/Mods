@@ -20,9 +20,12 @@ def main() -> None:
         manifest = json.loads(source.read("manifest.json"))
         if manifest["name"] != args.name or manifest["version_number"] != args.version:
             raise ValueError("Release package manifest does not match the requested mod/version")
-        dlls = [entry for entry in source.infolist() if entry.filename.rsplit("/", 1)[-1] == args.dll]
+        # Windows-created release ZIPs may store backslashes in their member paths.
+        dlls = [entry for entry in source.infolist()
+                if entry.filename.replace("\\", "/").rsplit("/", 1)[-1] == args.dll]
         if len(dlls) != 1:
-            raise ValueError(f"Expected exactly one {args.dll}; found {len(dlls)}")
+            candidates = [entry.filename for entry in source.infolist() if entry.filename.lower().endswith(".dll")]
+            raise ValueError(f"Expected exactly one {args.dll}; found {len(dlls)}. DLL entries: {candidates}")
         data = source.read(dlls[0])
         args.changelog.parent.mkdir(parents=True, exist_ok=True)
         args.changelog.write_bytes(source.read("CHANGELOG.md"))

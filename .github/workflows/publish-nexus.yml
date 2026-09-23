@@ -5,6 +5,19 @@ on:
     tags:
       - 'freshcommands-v*'
       - 'freshdedicatedstorage-v*'
+  workflow_dispatch:
+    inputs:
+      mod:
+        description: Existing release package to publish
+        required: true
+        type: choice
+        options:
+          - FreshCommands
+          - FreshDedicatedStorage
+      version:
+        description: Existing package version, such as 2.1.0
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -18,9 +31,25 @@ jobs:
       - name: Select and validate released package
         id: package
         shell: bash
+        env:
+          INPUT_MOD: ${{ inputs.mod }}
+          INPUT_VERSION: ${{ inputs.version }}
         run: |
           set -euo pipefail
-          if [[ "$GITHUB_REF_NAME" == freshcommands-v* ]]; then
+          if [[ "${GITHUB_EVENT_NAME}" == 'workflow_dispatch' ]]; then
+            mod="$INPUT_MOD"
+            version="$INPUT_VERSION"
+            if [[ "$mod" == FreshCommands ]]; then
+              dll=FreshCommands.dll
+              file_id=8012718
+            elif [[ "$mod" == FreshDedicatedStorage ]]; then
+              dll=FreshStorage.dll
+              file_id=8012748
+            else
+              echo 'Unsupported mod' >&2
+              exit 1
+            fi
+          elif [[ "$GITHUB_REF_NAME" == freshcommands-v* ]]; then
             mod=FreshCommands
             dll=FreshCommands.dll
             file_id=8012718
