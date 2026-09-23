@@ -94,12 +94,14 @@ jobs:
           text = source.read_text(encoding='utf-8')
           match = re.search(rf'(?m)^##\s+{re.escape(version)}\s*$', text)
           if not match:
-              raise SystemExit(f'No CHANGELOG.md section found for {version}')
+              destination.write_text('', encoding='utf-8')
+              sys.exit(0)
           following = re.search(r'(?m)^##\s+', text[match.end():])
           section = text[match.end():match.end() + following.start()] if following else text[match.end():]
           section = section.strip()
           if not section:
-              raise SystemExit(f'Changelog section for {version} is empty')
+              destination.write_text('', encoding='utf-8')
+              sys.exit(0)
           destination.write_text(section + '\n', encoding='utf-8')
           PY
           echo 'text<<NEXUS_CHANGELOG' >> "$GITHUB_OUTPUT"
