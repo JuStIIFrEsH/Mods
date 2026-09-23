@@ -37,12 +37,45 @@ jobs:
           [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
           source="Valheim/$mod/$mod-$version.zip"
           destination="$RUNNER_TEMP/$mod-$version-Nexus.zip"
+          changelog="$RUNNER_TEMP/$mod-CHANGELOG.md"
           test -f "$source"
           python3 .github/scripts/package_nexus.py "$source" "$destination" \
-            --name "$mod" --version "$version" --dll "$dll"
+            --name "$mod" --version "$version" --dll "$dll" --changelog "$changelog"
           echo "file_id=$file_id" >> "$GITHUB_OUTPUT"
+          if [[ "$mod" == FreshCommands ]]; then
+            echo 'mod_id=15749645078373' >> "$GITHUB_OUTPUT"
+          else
+            echo 'mod_id=15749645078374' >> "$GITHUB_OUTPUT"
+          fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "destination=$destination" >> "$GITHUB_OUTPUT"
+          echo "changelog=$changelog" >> "$GITHUB_OUTPUT"
+
+      - name: Select changelog for this release
+        id: changelog
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - "${{ steps.package.outputs.changelog }}" "${{ steps.package.outputs.version }}" "$RUNNER_TEMP/nexus-changelog.md" <<'PY'
+          import re, sys
+          from pathlib import Path
+          source = Path(sys.argv[1])
+          version = sys.argv[2]
+          destination = Path(sys.argv[3])
+          text = source.read_text(encoding='utf-8')
+          match = re.search(rf'(?m)^##\s+{re.escape(version)}\s*$', text)
+          if not match:
+              raise SystemExit(f'No CHANGELOG.md section found for {version}')
+          following = re.search(r'(?m)^##\s+', text[match.end():])
+          section = text[match.end():match.end() + following.start()] if following else text[match.end():]
+          section = section.strip()
+          if not section:
+              raise SystemExit(f'Changelog section for {version} is empty')
+          destination.write_text(section + '\n', encoding='utf-8')
+          PY
+          echo 'text<<NEXUS_CHANGELOG' >> "$GITHUB_OUTPUT"
+          cat "$RUNNER_TEMP/nexus-changelog.md" >> "$GITHUB_OUTPUT"
+          echo 'NEXUS_CHANGELOG' >> "$GITHUB_OUTPUT"
 
       - name: Publish new Nexus file version
         uses: Nexus-Mods/upload-action@v1.0.0-beta.10
@@ -54,3 +87,5 @@ jobs:
           category: main
           primary_mod_manager_download: true
           update_mod_version: true
+          mod_id: ${{ steps.package.outputs.mod_id }}
+          changelog: ${{ steps.changelog.outputs.text }}

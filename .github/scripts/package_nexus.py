@@ -13,6 +13,7 @@ def main() -> None:
     parser.add_argument("--name", required=True)
     parser.add_argument("--version", required=True)
     parser.add_argument("--dll", required=True)
+    parser.add_argument("--changelog", type=Path, required=True)
     args = parser.parse_args()
 
     with zipfile.ZipFile(args.source) as source:
@@ -23,6 +24,8 @@ def main() -> None:
         if len(dlls) != 1:
             raise ValueError(f"Expected exactly one {args.dll}; found {len(dlls)}")
         data = source.read(dlls[0])
+        args.changelog.parent.mkdir(parents=True, exist_ok=True)
+        args.changelog.write_bytes(source.read("CHANGELOG.md"))
 
     args.destination.parent.mkdir(parents=True, exist_ok=True)
     install_path = f"BepInEx/plugins/JuStIIFrEsH-{args.name}/{args.dll}"
