@@ -1,0 +1,111 @@
+name: Publish Valheim mod to Hexium
+
+on:
+  push:
+    tags:
+      - 'freshcommands-v*'
+      - 'freshdedicatedstorage-v*'
+  workflow_dispatch:
+    inputs:
+      mod:
+        description: Existing release package to publish
+        required: true
+        type: choice
+        options:
+          - FreshCommands
+          - FreshDedicatedStorage
+      version:
+        description: Version of the existing package, such as 3.0.1
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select and validate released package
+        id: package
+        shell: bash
+        env:
+          INPUT_MOD: ${{ inputs.mod }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          if [[ "${GITHUB_EVENT_NAME}" == 'workflow_dispatch' ]]; then
+            mod="$INPUT_MOD"
+            version="$INPUT_VERSION"
+          elif [[ "$GITHUB_REF_NAME" == freshcommands-v* ]]; then
+            mod=FreshCommands
+            version="${GITHUB_REF_NAME#freshcommands-v}"
+          elif [[ "$GITHUB_REF_NAME" == freshdedicatedstorage-v* ]]; then
+            mod=FreshDedicatedStorage
+            version="${GITHUB_REF_NAME#freshdedicatedstorage-v}"
+          else
+            echo 'Unsupported release tag' >&2
+            exit 1
+          fi
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          package="Valheim/$mod/$mod-$version.zip"
+          test -f "$package"
+          test "$(unzip -p "$package" manifest.json | jq -r .name)" = "$mod"
+          test "$(unzip -p "$package" manifest.json | jq -r .version_number)" = "$version"
+          echo "mod=$mod" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "package=$package" >> "$GITHUB_OUTPUT"
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install Thunderstore CLI
+        run: dotnet tool install tcli --tool-path "$RUNNER_TEMP/tcli" --version 0.2.4
+
+      - name: Publish existing ZIP to Hexium
+        shell: bash
+        env:
+          TCLI_AUTH_TOKEN: ${{ secrets.HEXIUM_TOKEN }}
+          MOD: ${{ steps.package.outputs.mod }}
+          VERSION: ${{ steps.package.outputs.version }}
+          PACKAGE: ${{ steps.package.outputs.package }}
+        run: |
+          set -euo pipefail
+          test -n "$TCLI_AUTH_TOKEN"
+          mkdir -p "$RUNNER_TEMP/hexium"
+          python3 - <<'PY'
+          import json, os, zipfile
+          with zipfile.ZipFile(os.environ['PACKAGE']) as archive:
+              manifest = json.loads(archive.read('manifest.json'))
+          category = 'Tools' if os.environ['MOD'] == 'FreshCommands' else 'Storage'
+          def quoted(value):
+              return json.dumps(value, ensure_ascii=True)
+          config = f'''[config]
+          schemaVersion = "0.0.1"
+
+          [package]
+          namespace = "JuStIIFrEsH"
+          name = {quoted(manifest['name'])}
+          versionNumber = {quoted(manifest['version_number'])}
+          description = {quoted(manifest['description'])}
+          websiteUrl = {quoted(manifest['website_url'])}
+          containsNsfwContent = false
+
+          [publish]
+          repository = "https://valheim.hexium.gg"
+          communities = ["valheim"]
+
+          [publish.categories]
+          valheim = [{quoted(category)}]
+          '''
+          with open(os.path.join(os.environ['RUNNER_TEMP'], 'hexium', 'hexium.toml'), 'w', encoding='utf-8') as file:
+              file.write(config)
+          PY
+          "$RUNNER_TEMP/tcli/tcli" publish \
+            --file "$PACKAGE" \
+            --config-path "$RUNNER_TEMP/hexium/hexium.toml" \
+            --tcli-directory "$RUNNER_TEMP/hexium/data"
