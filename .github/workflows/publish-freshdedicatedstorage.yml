@@ -38,6 +38,6 @@ jobs:
           # Existing Thunderstore package categories are retained on updates.
           # The publisher still requires one valid category value for submission.
           categories: tools
-          description: Provides stackable Dedicated Storage Boxes with unlimited single-item capacity. Hugin's Reliquary automatically routes matching inventory items to storage. Munin's Waystation can send items from wilderness to a linked Reliquary across vast distances.
+          description: Provides stackable Dedicated Storage Boxes with unlimited single-item capacity. Hugin's Reliquary automatically routes matching inventory items to storage. Munin's Waystation can send items from the wild to a linked Reliquary across vast distances.
           # The publisher action runs from / and prefixes this value with dist/.
           file: ../../github/workspace/dist/release-package.zip
